@@ -1,0 +1,1 @@
+One-Jar-Main-Class: de.ploing.flickrdl.FlickrDL
