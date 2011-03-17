@@ -7,13 +7,6 @@ configurations {
     onejar
 }
 
-task foo << {
-    configurations.compile.files.each { file ->
-        println file
-    }
-}
-
-
 task dist(dependsOn: 'jar') << {
     ant.taskdef(name: 'onejar', classname: 'com.simontuffs.onejar.ant.OneJarTask', classpath: configurations.onejar.asPath, onerror: 'report')
     ant.onejar(destfile: 'build/flickrdl.jar', manifest: 'src/main/resources/manifest.mf') {
@@ -27,19 +20,20 @@ task dist(dependsOn: 'jar') << {
 }
 
 ideaProject {
-  javaVersion = '1.6'
+    javaVersion = '1.6'
 }
 
 repositories {
-  flatDir name: 'localRepository', dirs: 'lib'
-  mavenRepo urls: ['http://repo1.maven.org/maven2/']
-  mavenRepo urls: ['http://repository.codehaus.org']
+    flatDir name: 'localRepository', dirs: 'lib'
+    mavenCentral()
+    mavenRepo urls: ['http://repository.codehaus.org/']
+    mavenRepo urls: ['http://groovy-option-parser.googlecode.com/svn/repo']
 }
 
 dependencies {
-  onejar group: 'localRepository', name: 'one-jar-ant-task', version: '0.97'
-  compile group: 'localRepository', name: 'flickrapi', version: '1.2'
-  compile group: 'org.apache.sanselan', name: 'sanselan', version: '0.97-incubator'
-  groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.7.6'
+    onejar group: 'localRepository', name: 'one-jar-ant-task', version: '0.97'
+    compile group: 'localRepository', name: 'flickrapi', version: '1.2'
+    compile group: 'org.apache.sanselan', name: 'sanselan', version: '0.97-incubator'
+    compile group: 'org.computoring', name: 'gop', version: '0.11'
+    groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.7.6'
 }
-
