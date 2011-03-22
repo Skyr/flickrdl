@@ -129,7 +129,7 @@ class FlickrDL {
                 def photo = photosIntf.getPhoto(id)
                 def basename = 'flickr-' + photo.getOwner().getId() + '-' + id
                 // Download image
-                def url
+                def url = null
                 try { // Try to get original url
                     url = photo.getOriginalUrl()
                 } catch (FlickrException e) {
@@ -140,7 +140,12 @@ class FlickrDL {
                         url = photo.getLargeUrl()
                     } catch (FlickrException e2) { }
                 }
-                downloadImage(url, basename + '.' + url.tokenize('.')[-1])
+                if (url) {
+                    downloadImage(url, basename + '.' + url.tokenize('.')[-1])
+                } else {
+                    println('Hm, got no URL from flickr, skipping.')
+                    return
+                }
                 // Output metadata
                 if (params.sidecars) {
                     writeSidecar(photo, basename + '.xml')
