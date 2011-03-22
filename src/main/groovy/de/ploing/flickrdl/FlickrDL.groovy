@@ -25,8 +25,6 @@ class FlickrDL {
     }
 
     static readConfig() {
-        apiKey = '0dee2da17715aa9002179e2c1e9eed9e'
-        apiSecret = '1ec757c9ccc8d650'
         def prefs = Preferences.userNodeForPackage(this)
         apiKey = prefs.get('apiKey', null)
         apiSecret = prefs.get('apiSecret', null)
@@ -73,6 +71,10 @@ class FlickrDL {
         def parser = new Parser(description: 'Tool for downloading flickr images including the corresponding metadata')
         def params, images
         parser.with {
+            flag 'h', [
+                    longName: 'help',
+                    description: 'Show this help'
+            ]
             optional 'a', [
                     longName: 'apikey',
                     default: null,
@@ -101,6 +103,11 @@ class FlickrDL {
             System.err << parser.usage
             System.exit(1)
         }
+        // Show help?
+        if (params.help) {
+            System.err << parser.usage
+            System.exit(0)
+        }
         // Process api key option
         if (params.apikey) {
             def keyparts = params.apikey.tokenize(',');
@@ -126,8 +133,12 @@ class FlickrDL {
                 try { // Try to get original url
                     url = photo.getOriginalUrl()
                 } catch (FlickrException e) {
-                    // If unsuccessful, fall back to large image url
-                    url = photo.getLargeUrl()
+                    // If unsuccessful, fall back to largest possible image url
+                    try {
+                        url = photo.getSmallUrl();
+                        url = photo.getMediumUrl();
+                        url = photo.getLargeUrl()
+                    } catch (FlickrException e2) { }
                 }
                 downloadImage(url, basename + '.' + url.tokenize('.')[-1])
                 // Output metadata
