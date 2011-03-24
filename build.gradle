@@ -33,7 +33,6 @@ repositories {
 dependencies {
     onejar group: 'localRepository', name: 'one-jar-ant-task', version: '0.97'
     compile group: 'localRepository', name: 'flickrapi', version: '1.2'
-    compile group: 'org.apache.sanselan', name: 'sanselan', version: '0.97-incubator'
     compile group: 'org.computoring', name: 'gop', version: '0.11'
     groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.7.6'
 }
