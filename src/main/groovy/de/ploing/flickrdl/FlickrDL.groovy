@@ -39,6 +39,21 @@ class FlickrDL {
         return result
     }
 
+    static File findInPath(executableName) {
+        def systemPath = System.getenv("PATH")
+        if (!systemPath) {
+            return null
+        }
+        def result = null
+        systemPath.split(File.pathSeparator).each { path ->
+            def file = new File(path, executableName)
+            if (file.isFile()) {
+                result = file
+            }
+        }
+        return result
+    }
+
     static writeSidecar(photo, filename) {
         def outFile = new FileWriter(filename)
         def writer = new PrintWriter(outFile)
@@ -64,6 +79,27 @@ class FlickrDL {
         out << new URL(url).openStream()
         out.close()
         file.close()
+    }
+
+    static addMetadataWithExiftool(photo, imageFilename, path) {
+        def cmd = [ path,
+                "-artist=${photo.getOwner().getRealName()?:photo.getOwner().getUsername()}",
+                "-UserComment=License: ${licenses.get(photo.getLicense())} Source: ${photo.getUrl()}",
+                "-By-line=${photo.getOwner().getRealName()?:photo.getOwner().getUsername()}",
+                "-Contact=${photo.getUrl()}",
+                "-CopyrightNotice=${licenses.get(photo.getLicense())}"
+        ]
+        photo.getTags().each { t ->
+            cmd += [ "-Keywords+=${t.getValue()}" ]
+        }
+        cmd += [ imageFilename ]
+        def proc = cmd.execute()
+        proc.waitFor()
+    }
+
+    static addMetadataWithExiv2(photo, imageFilename, path) {
+        println "Adding metadata to ${imageFilename} with exiv2 ${path}"
+
     }
 
     static main(args) {
@@ -140,11 +176,23 @@ class FlickrDL {
                         url = photo.getLargeUrl()
                     } catch (FlickrException e2) { }
                 }
+                def imageFilename
                 if (url) {
-                    downloadImage(url, basename + '.' + url.tokenize('.')[-1])
+                    imageFilename = basename + '.' + url.tokenize('.')[-1]
+                    downloadImage(url, imageFilename)
                 } else {
                     println('Hm, got no URL from flickr, skipping.')
                     return
+                }
+                // Add metadata
+                def path = findInPath('exiftool.exe')?:findInPath('exiftool')
+                if (path) {
+                    addMetadataWithExiftool(photo, imageFilename, path)
+                } else {
+                    path = findInPath('exiv2.exe')?:findInPath('exiv2')
+                    if (path) {
+                        addMetadataWithExiv2(photo, imageFilename, path)
+                    }
                 }
                 // Output metadata
                 if (params.sidecars) {
