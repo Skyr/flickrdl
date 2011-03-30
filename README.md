@@ -15,13 +15,30 @@ document which will go public) and you want to give proper credits to images
 licensed in the Creative Commons.
 
 
+Requirements
+============
+
 Compilation
-===========
+-----------
 
 For compilation, you need a working gradle environment (get more information here: http://gradle.org/).
 In order to create the standalone jar file, run
 
     gradle dist
+
+
+External programs
+-----------------
+
+flickrdl is able to embed the images' metadata in the EXIF/IPTC section of the image.
+This is done by calling one of the following external tools:
+
+ * exiftool http://www.sno.phy.queensu.ca/~phil/exiftool/
+ * exiv2 http://www.exiv2.org/
+
+If one of these two programs is found in the current PATH, it will be used automatically.
+If none of them is installed, the only possibility to store the metadata is the creation
+of a sidecar file.
 
 
 Usage

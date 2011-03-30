@@ -92,14 +92,25 @@ class FlickrDL {
         photo.getTags().each { t ->
             cmd += [ "-Keywords+=${t.getValue()}" ]
         }
-        cmd += [ imageFilename ]
+        cmd += [ '-overwrite_original_in_place', imageFilename ]
         def proc = cmd.execute()
         proc.waitFor()
     }
 
     static addMetadataWithExiv2(photo, imageFilename, path) {
-        println "Adding metadata to ${imageFilename} with exiv2 ${path}"
-
+        def cmd = [ path,
+                "-Mset Exif.Image.Artist String ${photo.getOwner().getRealName()?:photo.getOwner().getUsername()}",
+                "-Mset Exif.Photo.UserComment String License: ${licenses.get(photo.getLicense())} Source: ${photo.getUrl()}",
+                "-Mset Iptc.Application2.Byline String ${photo.getOwner().getRealName()?:photo.getOwner().getUsername()}",
+                "-Mset Iptc.Application2.Contact String ${photo.getUrl()}",
+                "-Mset Iptc.Application2.Copyright String ${licenses.get(photo.getLicense())}"
+        ]
+        photo.getTags().each { t ->
+            cmd += [ "-Madd Iptc.Application2.Keywords String ${t.getValue()}" ]
+        }
+        cmd += [ imageFilename ]
+        def proc = cmd.execute()
+        proc.waitFor()
     }
 
     static main(args) {
