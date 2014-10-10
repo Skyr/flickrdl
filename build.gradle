@@ -19,20 +19,21 @@ task dist(dependsOn: 'jar') << {
     }
 }
 
-ideaProject {
-    javaVersion = '1.6'
-}
-
 repositories {
     flatDir name: 'localRepository', dirs: 'lib'
     mavenCentral()
-    mavenRepo urls: ['http://repository.codehaus.org/']
-    mavenRepo urls: ['http://groovy-option-parser.googlecode.com/svn/repo']
+    maven {
+      url 'http://repository.codehaus.org/'
+    }
+    maven {
+      url 'http://groovy-option-parser.googlecode.com/svn/repo'
+    }
 }
 
 dependencies {
     onejar group: 'localRepository', name: 'one-jar-ant-task', version: '0.97'
     compile group: 'localRepository', name: 'flickrapi', version: '1.2'
+    // compile group: 'com.flickr4java', name: 'flickr4java', version: '2.11'
     compile group: 'org.computoring', name: 'gop', version: '0.11'
-    groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.7.6'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.7.6'
 }
