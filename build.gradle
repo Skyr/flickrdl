@@ -32,8 +32,10 @@ repositories {
 
 dependencies {
     onejar group: 'localRepository', name: 'one-jar-ant-task', version: '0.97'
-    compile group: 'localRepository', name: 'flickrapi', version: '1.2'
-    // compile group: 'com.flickr4java', name: 'flickr4java', version: '2.11'
-    compile group: 'org.computoring', name: 'gop', version: '0.11'
+    compile group: 'com.flickr4java', name: 'flickr4java', version: '2.11'
+    compile('org.computoring:gop:0.11') {
+        exclude module: 'groovy-all-minimal'
+        //exclude group: 'org.codehaus.groovy', name: 'groovy-all-minimal', version: '1.5.6'
+    }
     compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.7.6'
 }

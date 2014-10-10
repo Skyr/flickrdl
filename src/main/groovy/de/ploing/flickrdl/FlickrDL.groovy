@@ -2,16 +2,16 @@ package de.ploing.flickrdl
 
 import groovy.xml.MarkupBuilder
 
-import com.aetrion.flickr.REST
-import com.aetrion.flickr.photos.Photo
-import com.aetrion.flickr.photos.PhotosInterface
-import com.aetrion.flickr.photos.Size
-import com.aetrion.flickr.photos.licenses.License
-import com.aetrion.flickr.photos.licenses.LicensesInterface
-import com.aetrion.flickr.tags.Tag
+import com.flickr4java.flickr.REST
+import com.flickr4java.flickr.photos.Photo
+import com.flickr4java.flickr.photos.PhotosInterface
+import com.flickr4java.flickr.photos.Size
+import com.flickr4java.flickr.photos.licenses.License
+import com.flickr4java.flickr.photos.licenses.LicensesInterface
+import com.flickr4java.flickr.tags.Tag
 import org.computoring.gop.Parser
 import java.util.prefs.Preferences
-import com.aetrion.flickr.FlickrException
+import com.flickr4java.flickr.FlickrException
 
 
 class FlickrDL {
