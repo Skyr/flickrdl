@@ -166,6 +166,17 @@ class FlickrDL {
             System.err.println('Flickr API key not set, create one here: http://www.flickr.com/services/api/misc.api_keys.html and use -a once!')
             System.exit(1)
         }
+        // Check proxy env
+        if (System.getenv("http_proxy")!=null) {
+            URL url = new URL(System.getenv("http_proxy"))
+            System.setProperty("http.proxyHost", url.getHost())
+            System.setProperty("http.proxyPort", url.getPort().toString())
+        }
+        if (System.getenv("https_proxy")!=null) {
+            URL url = new URL(System.getenv("https_proxy"))
+            System.setProperty("https.proxyHost", url.getHost())
+            System.setProperty("https.proxyPort", url.getPort().toString())
+        }
         // Read license infos from flickr
         licenses = getLicenseMap()
         // Now, process photo ids
